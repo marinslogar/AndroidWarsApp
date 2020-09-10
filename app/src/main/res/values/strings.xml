@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">AndroidWarsApp</string>
+    <string name="name">Name</string>
+    <string name="language">Language</string>
+    <string name="login">Login</string>
+    <string name="rng">RNG</string>
+    <string name="close">Close</string>
+    <string name="generate">Generate</string>
+</resources>
