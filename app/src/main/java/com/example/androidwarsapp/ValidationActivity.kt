@@ -5,11 +5,17 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
+import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import kotlinx.android.synthetic.main.activity_validation.*
+import kotlinx.coroutines.*
+//import kotlinx.coroutines.Dispatchers
+//import kotlinx.coroutines.GlobalScope
+//import kotlinx.coroutines.launch
+//import kotlinx.coroutines.withContext
 import java.util.*
 import java.util.regex.Pattern
 
@@ -23,27 +29,9 @@ class ValidationActivity : AppCompatActivity() {
         languageButton.setOnClickListener {
             changeLanguage()
         }
-//
+
         loginButton.setOnClickListener {
-            val lengthExclude = Regex("""^[aA-zZ]{4,14}[^?]${'$'}""")
-            val lengthExcludeValue: String? = lengthExclude.find(validationTextField.text)?.value
-            //println(lengthExcludeValue)
-
-            val occuranceOfA = countOccurrences(validationTextField.text.toString(), 'a')
-            //println(occuranceOfA)
-
-            val exactlyOne = Regex("""^[^7]*7[^7]*${'$'}""")
-            val exactlyOneValue: String? = exactlyOne.find(validationTextField.text)?.value
-            //println(exactlyOneValue)
-
-            val containsB = Regex("""[aA-zZ][b]""")
-            val containsBValue: String? = containsB.find(validationTextField.text)?.value
-            println("contains$containsBValue")
-
-            if(lengthExcludeValue != null && occuranceOfA >=2 && exactlyOneValue != null && containsB != null) {
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-            }
+            validate()
         }
 
         rngButton.setOnClickListener {
@@ -57,7 +45,38 @@ class ValidationActivity : AppCompatActivity() {
         validationTextField.setText(randomNumber.toString())
     }
 
-    fun countOccurrences(s: String, ch: Char): Int {
+    private fun validate() = runBlocking<Unit> {
+        launch {
+            GlobalScope.launch {
+                val lengthExclude = Regex("""^[aA-zZ][^?]{4,14}${'$'}""")
+                val lengthExcludeValue = lengthExclude.find(validationTextField.text)?.value
+
+                val occuranceOfA = countOccurrences(validationTextField.text.toString(), 'a')
+
+                val exactlyOne = Regex("""^[^7]*7[^7]*${'$'}""")
+                val exactlyOneValue = exactlyOne.find(validationTextField.text)?.value
+
+                val checkForB = Regex("""[b]+""")
+                val checkForBValue = checkForB.find(validationTextField.text)?.value
+
+                var containsBValue: String? = ""
+
+                if (checkForBValue != null) {
+                    val containsB = Regex("""[aA-zZ][b]""")
+                    containsBValue = containsB.find(validationTextField.text)?.value
+                }
+
+                if (occuranceOfA != null) {
+                    if(lengthExcludeValue != null && occuranceOfA >= 2 && exactlyOneValue != null && containsBValue != null) {
+                        val intent = Intent(this@ValidationActivity, MainActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
+            }
+        }
+    }
+
+    fun countOccurrences(s: String, ch: Char): Int? {
         val matcher = Pattern.compile(ch.toString()).matcher(s)
         var counter = 0
         while (matcher.find()) counter++
