@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AndroidWarsApp</string>
+    <string name="name">Ime</string>
+    <string name="language">Jezik</string>
+    <string name="login">Prijavi se</string>
+    <string name="rng">RNG</string>
+    <string name="close">Zatvori</string>
+    <string name="generate">Generiraj</string>
+</resources>
