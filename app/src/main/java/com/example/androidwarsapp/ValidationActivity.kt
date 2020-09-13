@@ -19,21 +19,34 @@ class ValidationActivity : AppCompatActivity() {
         loadLocale()
         setContentView(R.layout.activity_validation)
         this.title = "Validation screen"
-        
+
         languageButton.setOnClickListener {
             changeLanguage()
         }
 //
-//        loginButton.setOnClickListener {
-//            //^[aA-zZ]{4,14}$
-//
-//            val s = validationTextField.text.toString()
-//            println(countOccurrences(s, 'a'))
-//
-//        }
+        loginButton.setOnClickListener {
+            val lengthExclude = Regex("""^[aA-zZ]{4,14}[^?]${'$'}""")
+            val lengthExcludeValue: String? = lengthExclude.find(validationTextField.text)?.value
+            //println(lengthExcludeValue)
+
+            val occuranceOfA = countOccurrences(validationTextField.text.toString(), 'a')
+            //println(occuranceOfA)
+
+            val exactlyOne = Regex("""^[^7]*7[^7]*${'$'}""")
+            val exactlyOneValue: String? = exactlyOne.find(validationTextField.text)?.value
+            //println(exactlyOneValue)
+
+            val containsB = Regex("""[aA-zZ][b]""")
+            val containsBValue: String? = containsB.find(validationTextField.text)?.value
+            println("contains$containsBValue")
+
+            if(lengthExcludeValue != null && occuranceOfA >=2 && exactlyOneValue != null && containsB != null) {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }
+        }
 
         rngButton.setOnClickListener {
-            println(validationTextField.text)
             val intent = Intent(this, RngActivity::class.java).apply {
                 putExtra("validationTextField", validationTextField.text.toString())
             }
@@ -44,12 +57,12 @@ class ValidationActivity : AppCompatActivity() {
         validationTextField.setText(randomNumber.toString())
     }
 
-//    fun countOccurrences(s: String, ch: Char): Int {
-//        val matcher = Pattern.compile(ch.toString()).matcher(s)
-//        var counter = 0
-//        while (matcher.find()) counter++
-//        return counter
-//    }
+    fun countOccurrences(s: String, ch: Char): Int {
+        val matcher = Pattern.compile(ch.toString()).matcher(s)
+        var counter = 0
+        while (matcher.find()) counter++
+        return counter
+    }
 
     fun changeLanguage() {
         val languageArray = arrayOf("English", "Croatian")
