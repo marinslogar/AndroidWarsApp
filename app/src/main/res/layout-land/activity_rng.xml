@@ -4,17 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#4CAF50"
+    android:background="#D54444"
     tools:context=".RngActivity">
 
     <TextView
         android:id="@+id/rngTextField"
         android:layout_width="146dp"
         android:layout_height="26dp"
-        android:layout_marginStart="132dp"
-        android:layout_marginTop="57dp"
+        android:layout_marginStart="292dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="293dp"
         android:text="@string/rng"
         android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
